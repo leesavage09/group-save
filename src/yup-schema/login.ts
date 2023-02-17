@@ -1,6 +1,11 @@
-import { object, string } from 'yup'
+import { object, Schema, string } from 'yup'
 
-export const loginSchema = object({
+export interface LoginSchema {
+  email: string
+  password: string
+}
+
+export const loginSchema: Schema<LoginSchema> = object({
   email: string().email().required('Email is required'),
   password: string().required('Password is required'),
 })
