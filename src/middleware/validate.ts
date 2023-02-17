@@ -1,21 +1,29 @@
-import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
-import { AnyObject, Maybe, ObjectSchema, ValidationError } from 'yup'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { Schema, ValidationError } from 'yup'
 
-export const validate = (
-  schema: ObjectSchema<Maybe<AnyObject>>,
-  handler: NextApiHandler
-) => {
-  return async (req: NextApiRequest, res: NextApiResponse<ValidationError>) => {
+export interface ValidatedRequest<T = any> extends NextApiRequest {
+  yupObject: T
+}
+
+export type NextHandler = (
+  req: ValidatedRequest,
+  res: NextApiResponse
+) => Promise<void>
+
+export const validate = (schema: Schema, next: NextHandler) => {
+  return async (
+    req: ValidatedRequest<Schema>,
+    res: NextApiResponse<ValidationError>
+  ) => {
     try {
-      req.body = await schema.validate(req.body, {
+      req.yupObject = await schema.validate(req.body, {
         abortEarly: false,
         stripUnknown: true,
       })
     } catch (error: unknown) {
-      const ve = error as ValidationError
-      res.status(400).json(ve)
+      return res.status(400).json(error as ValidationError)
     }
 
-    await handler(req, res)
+    await next(req, res)
   }
 }
