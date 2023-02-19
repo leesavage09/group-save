@@ -24,5 +24,5 @@ export const loginUser = async (
 }
 
 export const deleteAllUsers = async () => {
-  User.deleteMany({})
+  return User.deleteMany({})
 }
