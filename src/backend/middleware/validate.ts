@@ -1,5 +1,6 @@
 import type { NextApiHandler } from 'next'
 import { Schema } from 'yup'
+import { createResponse } from '../api/response'
 
 export const validate = (
   schema: Schema,
@@ -13,7 +14,7 @@ export const validate = (
       })
     } catch (error) {
       if (error instanceof Error && error.name === 'ValidationError') {
-        res.status(400).json(error)
+        res.status(400).json(createResponse(undefined, error))
         throw error
       }
     }
