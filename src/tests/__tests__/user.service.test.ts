@@ -5,12 +5,12 @@ import {
 } from 'src/backend/db/services/user.services'
 
 describe('User Service', () => {
-  afterAll(async () => {
+  beforeAll(async () => {
     await deleteAllUsers()
   })
 
   const userPayload = {
-    email: 'leesavage09@gmail.com',
+    email: 'test@email.com',
     password: '1234',
   }
 
