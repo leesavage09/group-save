@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { Schema, ValidationError } from 'yup'
 
 export interface ValidatedRequest<T = any> extends NextApiRequest {
-  yupObject: T
+  validatedBody: T
 }
 
 export type NextHandler = (
@@ -16,7 +16,7 @@ export const validate = (schema: Schema, next: NextHandler) => {
     res: NextApiResponse<ValidationError>
   ) => {
     try {
-      req.yupObject = await schema.validate(req.body, {
+      req.validatedBody = await schema.validate(req.body, {
         abortEarly: false,
         stripUnknown: true,
       })
