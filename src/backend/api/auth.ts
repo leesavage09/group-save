@@ -3,7 +3,6 @@ import { sign, verify } from 'jsonwebtoken'
 import { UserDocument } from '../db/models/user'
 
 export const jwtSecret = (() => {
-  console.log('jwt')
   const jwtSecret = process.env.JWT_SECRET
 
   if (!jwtSecret)
@@ -26,12 +25,12 @@ export const signJWT = (user: UserDocument) => {
 }
 
 export const verifyJWT = (jwt: string) => {
-  verify(jwt, jwtSecret, async function (error, decode) {
-    if (!error && decode) {
-      return await true
-    }
-  })
-  return false
+  try {
+    const decoded = verify(jwt, jwtSecret)
+    return !!decoded
+  } catch (error) {
+    return false
+  }
 }
 
 export const setAuthCookie = (jwt: string | null) => {
