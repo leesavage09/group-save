@@ -2,7 +2,7 @@ import {
   createUser,
   deleteAllUsers,
   loginUser,
-} from '../../db/services/user.services'
+} from 'src/backend/db/services/user.services'
 
 describe('User Service', () => {
   afterAll(async () => {

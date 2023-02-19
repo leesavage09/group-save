@@ -1,4 +1,4 @@
-import { connectMongo } from 'src/db/connectMongo'
+import { connectMongo } from 'src/backend/db/connectMongo'
 
 beforeAll(async () => {
   await connectMongo()
