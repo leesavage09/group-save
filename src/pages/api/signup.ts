@@ -11,24 +11,15 @@ const handler: NextApiHandler = async (req, res) => {
   await connectMongo()
   const user = req.body as LoginSchema
   try {
-    const createdUser = await createUser(user)
-    res
-      .status(200)
-      .json(createResponse(`User ${createdUser.email} was created`))
+    await createUser(user)
+    res.status(200).json(createResponse(`Ok`))
   } catch (error) {
     if (
       error instanceof Error &&
       error.name === 'MongoServerError' &&
       (error as MongoServerError).code === 11000
     ) {
-      res
-        .status(200)
-        .json(
-          createResponse(
-            undefined,
-            `Unable to signup ${user.email} the account already exists, please login instead`
-          )
-        )
+      res.status(200).json(createResponse(undefined, `account already exists`))
     }
 
     throw error
