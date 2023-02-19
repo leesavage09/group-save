@@ -6,6 +6,7 @@ export const log = (next: NextApiHandler): NextApiHandler => {
     try {
       await next(req, res)
     } catch (error) {
+      console.log('low', error) // TODO low priority errors / warnings
       if (!res.headersSent) {
         console.log(error) // TODO better logging
         return res.status(500).json(
