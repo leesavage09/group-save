@@ -28,17 +28,17 @@ describe('User Service', () => {
 
   describe('log a user in', () => {
     it('should return true with a valid password', async () => {
-      expect(await loginUser(userPayload.email, userPayload.password)).toBe(
-        true
+      expect(await loginUser(userPayload.email, userPayload.password)).not.toBe(
+        null
       )
     })
 
     it('should return false with an invalid password', async () => {
-      expect(await loginUser(userPayload.email, 'wrong password')).toBe(false)
+      expect(await loginUser(userPayload.email, 'wrong password')).toBe(null)
     })
 
     it('should return false with an invalid email', async () => {
-      expect(await loginUser('unknown email', 'wrong password')).toBe(false)
+      expect(await loginUser('unknown email', 'wrong password')).toBe(null)
     })
   })
 })
