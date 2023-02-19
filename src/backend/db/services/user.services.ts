@@ -5,7 +5,7 @@ export const createUser = (user: UserInput) => {
   return User.create(user)
 }
 
-export const findUser = (
+const findUser = (
   query: FilterQuery<UserDocument>,
   options = { lean: true }
 ) => {
@@ -18,7 +18,7 @@ export const loginUser = async (
 ) => {
   const user = await findUser({ email }, { lean: false })
 
-  if (!user) throw Error('User dose not exist')
+  if (!user) return false
 
   return user.comparePassword(password)
 }

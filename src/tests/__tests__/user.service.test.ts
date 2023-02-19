@@ -15,34 +15,30 @@ describe('User Service', () => {
   }
 
   describe('create user', () => {
-    describe('with valid input', () => {
-      it('should create a new user', async () => {
-        const user = await createUser(userPayload)
-        expect(user.password).toHaveLength(60)
-        expect(user.email).toBe(userPayload.email)
-      })
+    it('with valid input, should create a new user', async () => {
+      const user = await createUser(userPayload)
+      expect(user.password).toHaveLength(60)
+      expect(user.email).toBe(userPayload.email)
     })
 
-    describe('with invalid input', () => {
-      it('should throw a validation error', async () => {
-        await expect(createUser(userPayload)).rejects.toThrow()
-      })
+    it('with invalid input, should throw a validation error', async () => {
+      await expect(createUser(userPayload)).rejects.toThrow()
     })
   })
 
   describe('log a user in', () => {
-    describe('using a valid password', () => {
-      it('should return true', async () => {
-        expect(await loginUser(userPayload.email, userPayload.password)).toBe(
-          true
-        )
-      })
+    it('should return true with a valid password', async () => {
+      expect(await loginUser(userPayload.email, userPayload.password)).toBe(
+        true
+      )
     })
 
-    describe('using an invalid password', () => {
-      it('should return false', async () => {
-        expect(await loginUser(userPayload.email, 'wrong password')).toBe(false)
-      })
+    it('should return false with an invalid password', async () => {
+      expect(await loginUser(userPayload.email, 'wrong password')).toBe(false)
+    })
+
+    it('should return false with an invalid email', async () => {
+      expect(await loginUser('unknown email', 'wrong password')).toBe(false)
     })
   })
 })
