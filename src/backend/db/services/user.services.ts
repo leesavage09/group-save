@@ -1,5 +1,5 @@
 import { FilterQuery } from 'mongoose'
-import User, { UserDocument, UserInput } from 'src/db/models/user'
+import User, { UserDocument, UserInput } from '../models/user'
 
 export const createUser = (user: UserInput) => {
   return User.create(user)
