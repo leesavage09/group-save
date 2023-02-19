@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import mongoose from 'mongoose'
+import mongoose, { CallbackWithoutResultAndOptionalError } from 'mongoose'
 
 export interface UserInput {
   email: string
@@ -24,7 +24,16 @@ const userSchema = new mongoose.Schema({
   },
 })
 
-userSchema.index({ email: 1 })
+const hashPassword = function (
+  this: UserDocument,
+  next: CallbackWithoutResultAndOptionalError
+) {
+  bcrypt.hash(this.password, 10, async (error, hash) => {
+    if (error) throw error
+    this.password = hash
+    next()
+  })
+}
 
 userSchema.methods.comparePassword = async function (
   candidatePassword: string
@@ -33,4 +42,9 @@ userSchema.methods.comparePassword = async function (
   return bcrypt.compare(candidatePassword, user.password).catch(() => false)
 }
 
-export default mongoose.model<UserDocument>('User', userSchema)
+userSchema.index({ email: 1 })
+
+userSchema.pre('save', hashPassword)
+
+export default (mongoose.models.User as mongoose.Model<UserDocument>) ||
+  mongoose.model<UserDocument>('User', userSchema)
