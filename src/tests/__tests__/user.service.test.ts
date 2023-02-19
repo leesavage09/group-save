@@ -1,7 +1,11 @@
-import { deleteAllUsers } from '../../db/services/user.services'
+import {
+  createUser,
+  deleteAllUsers,
+  loginUser,
+} from '../../db/services/user.services'
 
 describe('User Service', () => {
-  afterEach(async () => {
+  afterAll(async () => {
     await deleteAllUsers()
   })
 
@@ -12,17 +16,33 @@ describe('User Service', () => {
 
   describe('create user', () => {
     describe('with valid input', () => {
-      it.todo('should create a new user')
+      it('should create a new user', async () => {
+        const user = await createUser(userPayload)
+        expect(user.password).toHaveLength(60)
+        expect(user.email).toBe(userPayload.email)
+      })
+    })
+
+    describe('with invalid input', () => {
+      it('should throw a validation error', async () => {
+        await expect(createUser(userPayload)).rejects.toThrow()
+      })
     })
   })
 
   describe('log a user in', () => {
     describe('using a valid password', () => {
-      it.todo('should return true')
+      it('should return true', async () => {
+        expect(await loginUser(userPayload.email, userPayload.password)).toBe(
+          true
+        )
+      })
     })
 
     describe('using an invalid password', () => {
-      it.todo('should return false')
+      it('should return false', async () => {
+        expect(await loginUser(userPayload.email, 'wrong password')).toBe(false)
+      })
     })
   })
 })
