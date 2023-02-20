@@ -14,7 +14,7 @@ export const validate = (
       })
     } catch (error) {
       if (error instanceof Error && error.name === 'ValidationError') {
-        res.status(400).json(createResponse(undefined, error))
+        res.status(200).json(createResponse(undefined, error))
         throw error
       }
     }

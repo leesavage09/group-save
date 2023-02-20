@@ -19,7 +19,9 @@ const handler: NextApiHandler = async (req, res) => {
 
   res
     .status(200)
-    .json(createResponse(undefined, `Username or password incorrect`))
+    .json(
+      createResponse(undefined, { message: `Username or password incorrect` })
+    )
 }
 
 export default log(validate(loginSchema, handler))
