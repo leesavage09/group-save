@@ -19,7 +19,7 @@ export const signJWT = (user: UserDocument) => {
     },
   })
     .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime('2h')
+    .setExpirationTime('1h')
     .sign(jwtSecret)
 }
 
@@ -32,7 +32,7 @@ export const verifyJWT = async (jwt: string) => {
   }
 }
 
-export const setAuthCookie = (jwt: string | null) => {
+export const getAuthCookie = (jwt: string | null) => {
   return cookie.serialize('auth', jwt || '', {
     httpOnly: true,
     secure: process.env.NODE_ENV !== 'development',
