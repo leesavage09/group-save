@@ -1,5 +1,5 @@
 import { NextApiHandler } from 'next'
-import { setAuthCookie as getAuthCookie } from 'src/backend/api/auth'
+import { getAuthCookie } from 'src/backend/api/auth'
 import { createResponse } from 'src/backend/api/response'
 import { log } from 'src/backend/middleware/log'
 

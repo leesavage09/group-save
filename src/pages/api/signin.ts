@@ -1,5 +1,5 @@
 import { NextApiHandler } from 'next'
-import { setAuthCookie as getAuthCookie } from 'src/backend/api/auth'
+import { getAuthCookie } from 'src/backend/api/auth'
 import { createResponse } from 'src/backend/api/response'
 import { connectMongo } from 'src/backend/db/connectMongo'
 import { loginUser } from 'src/backend/db/services/user.services'
@@ -18,7 +18,7 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   res
-    .status(401)
+    .status(200)
     .json(createResponse(undefined, `Username or password incorrect`))
 }
 
