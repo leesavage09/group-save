@@ -1,5 +1,5 @@
 import cookie from 'cookie'
-import { sign, verify } from 'jsonwebtoken'
+import { jwtVerify, SignJWT } from 'jose'
 import { UserDocument } from '../db/models/user'
 
 export const jwtSecret = (() => {
@@ -8,25 +8,24 @@ export const jwtSecret = (() => {
   if (!jwtSecret)
     throw new Error('Please define JWT_SECRET in the environment variables')
 
-  return jwtSecret
+  return new TextEncoder().encode(jwtSecret)
 })()
 
 export const signJWT = (user: UserDocument) => {
-  return sign(
-    {
-      user: {
-        id: user.id,
-        email: user.email,
-      },
+  return new SignJWT({
+    user: {
+      id: user.id,
+      email: user.email,
     },
-    jwtSecret,
-    { expiresIn: '1h' }
-  )
+  })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('2h')
+    .sign(jwtSecret)
 }
 
-export const verifyJWT = (jwt: string) => {
+export const verifyJWT = async (jwt: string) => {
   try {
-    const decoded = verify(jwt, jwtSecret)
+    const decoded = await jwtVerify(jwt, jwtSecret)
     return !!decoded
   } catch (error) {
     return false
