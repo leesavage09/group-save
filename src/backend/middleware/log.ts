@@ -8,9 +8,9 @@ export const log = (next: NextApiHandler): NextApiHandler => {
     } catch (error) {
       console.log('low', error) // TODO low priority errors / warnings
       if (!res.headersSent) {
-        console.log(error) // TODO better logging
-        return res.status(500).json(
-          createResponse(undefined, {
+        return res.status(200).json(
+          createResponse({
+            success: false,
             message: `Internal Server Error`,
           })
         )

@@ -1,9 +1,19 @@
-export const createResponse = (data?: unknown, error?: unknown) => {
-  if (!data && !error) {
-    throw Error('you must proved either data or error to createResponse')
-  }
+export interface GsResponse {
+  data?: unknown
+  message: string
+  success?: boolean
+}
+
+export const createResponse = ({
+  data,
+  message,
+  success = true,
+}: GsResponse) => {
   return {
     data,
-    error,
+    message,
+    success,
   }
 }
+
+export const okResponse = createResponse({ message: 'Ok', success: true })

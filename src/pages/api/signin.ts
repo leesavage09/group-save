@@ -1,6 +1,6 @@
 import { NextApiHandler } from 'next'
 import { getAuthCookie } from 'src/backend/api/auth'
-import { createResponse } from 'src/backend/api/response'
+import { createResponse, okResponse } from 'src/backend/api/response'
 import { connectMongo } from 'src/backend/db/connectMongo'
 import { loginUser } from 'src/backend/db/services/user.services'
 import { log } from 'src/backend/middleware/log'
@@ -14,13 +14,16 @@ const handler: NextApiHandler = async (req, res) => {
 
   if (jwt) {
     res.setHeader('Set-Cookie', getAuthCookie(jwt))
-    return res.status(200).json(createResponse({ message: `Ok` }))
+    return res.status(200).json(okResponse)
   }
 
   res
     .status(200)
     .json(
-      createResponse(undefined, { message: `Username or password incorrect` })
+      createResponse({
+        success: false,
+        message: 'Username or password incorrect',
+      })
     )
 }
 

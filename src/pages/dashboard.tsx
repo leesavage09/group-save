@@ -1,4 +1,3 @@
-import styles from '@styles/Home.module.css'
 import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -7,10 +6,8 @@ export default function Home() {
   const router = useRouter()
 
   const logout = async () => {
-    const result = await axios.post('/api/signout')
-    if (result.data) {
-      router.push('/signin')
-    }
+    await axios.post('/api/signout')
+    router.push('/signin')
   }
 
   return (
@@ -21,7 +18,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/assets/favicon.ico" />
       </Head>
-      <main className={styles.main}>
+      <main>
         <h1>Home</h1>
         <p>This page is private</p>
         <button onClick={() => logout()}>Sign out</button>

@@ -1,9 +1,9 @@
-import styles from '@styles/Home.module.css'
 import axios from 'axios'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { GsResponse } from 'src/backend/api/response'
 
 export default function Signin() {
   const [error, setError] = useState<string>()
@@ -18,13 +18,14 @@ export default function Signin() {
       email,
       password,
     })
-    if (result.data.data) {
-      router.push('/dashboard')
+    setLoading(false)
+
+    const gsResponse = result.data as GsResponse
+    if (gsResponse.success) {
+      return router.push('/dashboard')
     }
-    if (result.data.error) {
-      console.log(result.data.error)
-      setError(result.data.error.message)
-    }
+
+    setError(gsResponse.message)
   }
 
   return (
@@ -35,7 +36,7 @@ export default function Signin() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/assets/favicon.ico" />
       </Head>
-      <main className={styles.main}>
+      <main>
         <h1>Sign In</h1>
         <p>{error}</p>
         <label>

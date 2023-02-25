@@ -28,10 +28,7 @@ const handleMalformedToken = (request: NextRequest) => {
 }
 
 const authorization = async (request: NextRequest) => {
-  if (isRouteMatch(request, sharedRoutes)) {
-    console.log('shared', request.url)
-    return
-  }
+  if (isRouteMatch(request, sharedRoutes)) return
 
   const jwt = request.cookies.get('auth')?.value
   if (jwt) {
