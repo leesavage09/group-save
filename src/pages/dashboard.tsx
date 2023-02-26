@@ -1,8 +1,17 @@
 import axios from 'axios'
+import { IncomingMessage, ServerResponse } from 'http'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { decodeJwtFromCookie } from 'src/backend/api/auth'
 
-export default function Home() {
+interface Home {
+  user: {
+    id: string
+    email: string
+  }
+}
+
+const Home: React.FC<Home> = ({ user }) => {
   const router = useRouter()
 
   const logout = async () => {
@@ -20,9 +29,23 @@ export default function Home() {
       </Head>
       <main>
         <h1>Home</h1>
-        <p>This page is private</p>
+        <p>{user.id}</p>
+        <p>This page is private, {user.email}</p>
         <button onClick={() => logout()}>Sign out</button>
       </main>
     </>
   )
+}
+
+export default Home
+
+export const getServerSideProps = async ({
+  req,
+  res,
+}: {
+  req: IncomingMessage
+  res: ServerResponse<IncomingMessage>
+}) => {
+  const jwt = await decodeJwtFromCookie(req, res)
+  return { props: { user: jwt.payload.user } }
 }

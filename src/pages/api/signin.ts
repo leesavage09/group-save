@@ -1,4 +1,4 @@
-import { getAuthCookie } from 'src/backend/api/auth'
+import { setAuthCookie } from 'src/backend/api/auth'
 import { ApiHandler, okResponse } from 'src/backend/api/response'
 import { connectMongo } from 'src/backend/db/connectMongo'
 import { loginUser } from 'src/backend/db/services/user.services'
@@ -12,7 +12,7 @@ const handler: ApiHandler = async (req, res) => {
   const jwt = await loginUser(user.email, user.password)
 
   if (jwt) {
-    res.setHeader('Set-Cookie', getAuthCookie(jwt))
+    setAuthCookie(jwt, req, res)
     return res.status(200).json(okResponse)
   }
 

@@ -1,5 +1,7 @@
-import cookie from 'cookie'
+import { getCookie, setCookie } from 'cookies-next'
+import { IncomingMessage, ServerResponse } from 'http'
 import { jwtVerify, SignJWT } from 'jose'
+import { NextApiRequest, NextApiResponse } from 'next'
 import { UserDocument } from '../db/models/user'
 
 export const jwtSecret = (() => {
@@ -23,21 +25,40 @@ export const signJWT = (user: UserDocument) => {
     .sign(jwtSecret)
 }
 
+export const decodeJWT = async (jwt: string) => {
+  const decoded = await jwtVerify(jwt, jwtSecret)
+  return decoded
+}
+
 export const verifyJWT = async (jwt: string) => {
   try {
-    const decoded = await jwtVerify(jwt, jwtSecret)
+    const decoded = await decodeJWT(jwt)
     return !!decoded
   } catch (error) {
     return false
   }
 }
 
-export const getAuthCookie = (jwt: string | null) => {
-  return cookie.serialize('auth', jwt || '', {
+export const setAuthCookie = (
+  jwt: string | null,
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  setCookie('auth', jwt, {
+    req,
+    res,
     httpOnly: true,
     secure: process.env.NODE_ENV !== 'development',
     sameSite: 'strict',
     maxAge: jwt ? 3600 : 0,
     path: '/',
   })
+}
+
+export const decodeJwtFromCookie = async (
+  req: IncomingMessage,
+  res: ServerResponse<IncomingMessage>
+) => {
+  const cookie = getCookie('auth', { req, res })
+  return await decodeJWT(cookie as string)
 }
