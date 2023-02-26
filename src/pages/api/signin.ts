@@ -18,7 +18,7 @@ const handler: ApiHandler = async (req, res) => {
 
   res.status(200).json({
     success: false,
-    message: 'Username or password incorrect',
+    message: ['Username or password incorrect'],
   })
 }
 

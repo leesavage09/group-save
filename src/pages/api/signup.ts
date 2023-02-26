@@ -20,7 +20,7 @@ const handler: ApiHandler = async (req, res) => {
     ) {
       res
         .status(200)
-        .json({ success: false, message: 'account already exists' })
+        .json({ success: false, message: ['account already exists'] })
     }
 
     throw error

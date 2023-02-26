@@ -1,5 +1,5 @@
 import type { NextApiHandler } from 'next'
-import { Schema } from 'yup'
+import { Schema, ValidationError } from 'yup'
 
 export const validate = (
   schema: Schema,
@@ -12,11 +12,13 @@ export const validate = (
         stripUnknown: true,
       })
     } catch (error) {
-      if (error instanceof Error && error.name === 'ValidationError') {
+      if (
+        error instanceof ValidationError &&
+        error.name === 'ValidationError'
+      ) {
         res.status(200).json({
           success: false,
-          message: 'Validation Error',
-          data: error,
+          message: error.errors,
         })
         throw error
       }

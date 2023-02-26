@@ -7,8 +7,8 @@ export type ApiHandler = (
 
 export type GsResponse = {
   data?: unknown
-  message: string
+  message: Array<string>
   success?: boolean
 }
 
-export const okResponse = { message: 'Ok', success: true } as GsResponse
+export const okResponse = { message: ['Ok'], success: true } as GsResponse

@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { GsResponse } from 'src/backend/api/response'
 
 export default function Signup() {
-  const [error, setError] = useState<string>()
+  const [error, setError] = useState<string[]>()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
