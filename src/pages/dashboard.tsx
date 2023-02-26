@@ -2,7 +2,7 @@ import axios from 'axios'
 import { IncomingMessage, ServerResponse } from 'http'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { decodeJwtFromCookie } from 'src/backend/api/auth'
+import { decryptJwtFromCookie } from 'src/backend/api/auth'
 
 interface Home {
   user: {
@@ -46,6 +46,6 @@ export const getServerSideProps = async ({
   req: IncomingMessage
   res: ServerResponse<IncomingMessage>
 }) => {
-  const jwt = await decodeJwtFromCookie(req, res)
+  const jwt = await decryptJwtFromCookie(req, res)
   return { props: { user: jwt.payload.user } }
 }

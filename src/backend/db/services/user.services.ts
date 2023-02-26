@@ -1,5 +1,5 @@
 import { FilterQuery } from 'mongoose'
-import { signJWT } from 'src/backend/api/auth'
+import { encryptJWT } from 'src/backend/api/auth'
 import User, { UserDocument, UserInput } from '../models/user'
 
 export const createUser = (user: UserInput) => {
@@ -20,7 +20,7 @@ export const loginUser = async (
   const user = await findUser({ email }, { lean: false })
 
   if (!user) return null
-  return (await user.comparePassword(password)) ? signJWT(user) : null
+  return (await user.comparePassword(password)) ? encryptJWT(user) : null
 }
 
 export const deleteAllUsers = async () => {

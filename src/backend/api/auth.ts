@@ -1,39 +1,41 @@
 import { getCookie, setCookie } from 'cookies-next'
 import { IncomingMessage, ServerResponse } from 'http'
-import { jwtVerify, SignJWT } from 'jose'
+import { base64url, EncryptJWT, jwtDecrypt } from 'jose'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { UserDocument } from '../db/models/user'
 
-export const jwtSecret = (() => {
-  const jwtSecret = process.env.JWT_SECRET
+export const jweSecret = (() => {
+  const jweSecret = process.env.JWE_SECRET
 
-  if (!jwtSecret)
-    throw new Error('Please define JWT_SECRET in the environment variables')
+  if (!jweSecret)
+    throw new Error('Please define JWE_SECRET in the environment variables')
 
-  return new TextEncoder().encode(jwtSecret)
+  return base64url.decode(jweSecret)
 })()
 
-export const signJWT = (user: UserDocument) => {
-  return new SignJWT({
+export const encryptJWT = async (user: UserDocument) => {
+  const payload = {
     user: {
       id: user.id,
       email: user.email,
     },
-  })
-    .setProtectedHeader({ alg: 'HS256' })
+  }
+
+  return await new EncryptJWT(payload)
+    .setProtectedHeader({ alg: 'dir', enc: 'A128CBC-HS256' })
     .setExpirationTime('1h')
-    .sign(jwtSecret)
+    .encrypt(jweSecret)
 }
 
-export const decodeJWT = async (jwt: string) => {
-  const decoded = await jwtVerify(jwt, jwtSecret)
-  return decoded
+export const decryptJWT = async (jwt: string) => {
+  const decrypted = await jwtDecrypt(jwt, jweSecret)
+  return decrypted
 }
 
 export const verifyJWT = async (jwt: string) => {
   try {
-    const decoded = await decodeJWT(jwt)
-    return !!decoded
+    const decrypted = await decryptJWT(jwt)
+    return !!decrypted
   } catch (error) {
     return false
   }
@@ -55,10 +57,10 @@ export const setAuthCookie = (
   })
 }
 
-export const decodeJwtFromCookie = async (
+export const decryptJwtFromCookie = async (
   req: IncomingMessage,
   res: ServerResponse<IncomingMessage>
 ) => {
   const cookie = getCookie('auth', { req, res })
-  return await decodeJWT(cookie as string)
+  return await decryptJWT(cookie as string)
 }
