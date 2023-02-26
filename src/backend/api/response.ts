@@ -1,19 +1,14 @@
-export interface GsResponse {
+import { NextApiRequest, NextApiResponse } from 'next'
+
+export type ApiHandler = (
+  req: NextApiRequest,
+  res: NextApiResponse<GsResponse>
+) => unknown | Promise<unknown>
+
+export type GsResponse = {
   data?: unknown
   message: string
   success?: boolean
 }
 
-export const createResponse = ({
-  data,
-  message,
-  success = true,
-}: GsResponse) => {
-  return {
-    data,
-    message,
-    success,
-  }
-}
-
-export const okResponse = createResponse({ message: 'Ok', success: true })
+export const okResponse = { message: 'Ok', success: true } as GsResponse
