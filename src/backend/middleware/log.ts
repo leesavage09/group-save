@@ -7,6 +7,7 @@ export const log = (next: NextApiHandler): NextApiHandler => {
     } catch (error) {
       // TODO logging required
       if (!res.headersSent) {
+        console.log(error)
         return res.status(200).json({
           success: false,
           message: `Internal Server Error`,
